@@ -1,6 +1,6 @@
-This is a template project. Fork it and customize it to your needs.
+# Notification Service Frontend
 
-This project contains example use cases for all technologies listed below. (It is not pretty but that is not the point)
+This is the notification service micro frontend of the ASE-25 project.
 
 # Setup
 
@@ -118,7 +118,7 @@ You can use the library as any other npm package. If you want to change anything
 
 ## Single-spa microfrontend
 
-This template builds as a microfrontend that can run standalone for local development or be mounted by a single-spa host.
+This repo builds as a microfrontend that can run standalone for local development or be mounted by a single-spa host.
 
 - Build output: ES module library at dist/index.js exporting bootstrap, mount, unmount
 - Shared deps are externalized: react, react-dom, react-router, single-spa, single-spa-react
