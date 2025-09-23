@@ -9,15 +9,12 @@ import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy';
 import './i18n';
 import { Provider } from 'react-redux';
 import store from '@stores/index.ts';
+import NotificationBell from './components/NotificationBell/NotificationBell';
 
 const joyTheme = createCustomJoyTheme();
 const muiTheme = createCustomMuiTheme();
 
-type AppProps = {
-  basename?: string;
-};
-
-function App({ basename }: AppProps) {
+function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={{ [MATERIAL_THEME_ID]: muiTheme }}>
@@ -27,9 +24,7 @@ function App({ basename }: AppProps) {
           modeStorageKey="joy-mode"
           colorSchemeStorageKey="joy-color-scheme"
         >
-          <BrowserRouter basename={basename}>
-            <RoutingComponent />
-          </BrowserRouter>
+          <NotificationBell />
         </JoyCssVarsProvider>
       </ThemeProvider>
     </Provider>
