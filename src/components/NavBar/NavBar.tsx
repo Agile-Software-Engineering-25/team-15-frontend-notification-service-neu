@@ -25,8 +25,6 @@ const navBarElements = [
 ];
 
 const NavBar = () => {
-  let basename = import.meta.env.BASE_URL || '/';
-  console.log(basename);
   return (
     <Stack
       id={'navbar'}
@@ -54,6 +52,7 @@ const NavBar = () => {
         />
         {navBarElements.map((element) => (
           <Button
+            key={element.name}
             variant="outlined"
             sx={{
               fontSize: '16px',

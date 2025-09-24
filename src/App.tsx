@@ -1,5 +1,3 @@
-import { BrowserRouter } from 'react-router';
-import RoutingComponent from '@components/RoutingComponent/RoutingComponent';
 import {
   createCustomJoyTheme,
   createCustomMuiTheme,
