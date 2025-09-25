@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { SliceState } from '..';
+import type { NotificationObject } from '@custom-types/notification-service';
 
 const notificationSlice = createSlice({
   name: 'notificationSlice',
@@ -8,9 +9,9 @@ const notificationSlice = createSlice({
     data: [],
     state: 'idle',
     error: null,
-  } as SliceState<Notification[]>,
+  } as SliceState<NotificationObject[]>,
   reducers: {
-    setNotifications: (state, action: PayloadAction<Notification[]>) => {
+    setNotifications: (state, action: PayloadAction<NotificationObject[]>) => {
       state.data.push(...action.payload);
     },
   },

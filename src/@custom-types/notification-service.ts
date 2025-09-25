@@ -4,7 +4,7 @@ enum NotificationType {
   All = 'all',
 }
 
-interface Notification {
+interface NotificationObject {
   id: string;
   userId: string;
   message: string;
@@ -13,4 +13,4 @@ interface Notification {
   type: NotificationType;
 }
 
-export type { Notification, NotificationType };
+export type { NotificationObject, NotificationType };
