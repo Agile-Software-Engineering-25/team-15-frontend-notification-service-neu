@@ -1,5 +1,6 @@
 import App from '@/App';
 import { Box, Button, Stack } from '@mui/joy';
+import LanguageSelectorComponent from '../LanguageSelectorComponent/LanguageSelectorComponent';
 
 const navBarElements = [
   {
@@ -68,6 +69,7 @@ const NavBar = () => {
             {element.name}
           </Button>
         ))}
+        <LanguageSelectorComponent />
         <Box sx={{ alignItems: 'right', marginLeft: 'auto', display: 'flex' }}>
           <App />
         </Box>
