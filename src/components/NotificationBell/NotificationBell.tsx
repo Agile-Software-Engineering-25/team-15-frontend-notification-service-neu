@@ -30,7 +30,16 @@ const NotificationBell = () => {
         <NotificationsNoneOutlinedIcon />
       </MenuButton>
       <Menu variant="outlined" sx={{ p: 2, width: 300 }}>
-        <Stack spacing={1}>
+        <Stack
+          spacing={1}
+          sx={{
+            height: '60vh',
+            overflowY: 'auto',
+            maxHeight: '60vh',
+            pr: 1,
+            boxSizing: 'border-box',
+          }}
+        >
           <Typography
             component="h6"
             sx={{ fontSize: '1.125rem', fontWeight: 600 }}
