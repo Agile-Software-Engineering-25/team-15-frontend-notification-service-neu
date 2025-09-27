@@ -20,17 +20,21 @@ const NotificationBellBadge = ({ children }: NotificationBellBadgeProps) => {
     <Badge
       badgeContent={
         unreadMessages > 0 ? (
-          unreadMessages > 99 ? (
-            <Typography>{'99+'}</Typography>
+          unreadMessages > 5 ? (
+            <Typography
+              sx={{ color: 'var(--joy-palette-primary-200)', p: 0.2 }}
+            >
+              {'5+'}
+            </Typography>
           ) : (
-            <Typography sx={{ color: 'var(--joy-palette-warning-200)' }}>
+            <Typography sx={{ color: 'var(--joy-palette-primary-200)' }}>
               {unreadMessages}
             </Typography>
           )
         ) : undefined
       }
-      color="warning"
-      size="sm"
+      color="primary"
+      size="md"
     >
       {children}
     </Badge>
