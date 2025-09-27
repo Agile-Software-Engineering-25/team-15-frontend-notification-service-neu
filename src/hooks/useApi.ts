@@ -8,7 +8,7 @@ const useApi = () => {
 
   const getNotifications = useCallback(async () => {
     const response = await axiosInstance.get('/notifications', {
-      headers: { 'X-User-Id': '1' }, // Replace this with the id of the logged-in user
+      params: { userId: '1' }, // Replace this with the id of the logged-in user
     });
     return response.data as NotificationObject[];
   }, [axiosInstance]);
