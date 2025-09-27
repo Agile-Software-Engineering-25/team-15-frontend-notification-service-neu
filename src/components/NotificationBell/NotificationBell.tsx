@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { NotificationObject } from '@custom-types/notification-service';
+import NotificationBellBadge from './NotificationBellBadge/NotificationBellBadge';
 
 const NotificationBell = () => {
   let notifications = useTypedSelector((state) => state.notifications.data);
@@ -27,7 +28,9 @@ const NotificationBell = () => {
   return (
     <Dropdown>
       <MenuButton variant="outlined" sx={{ p: 1.3 }}>
-        <NotificationsNoneOutlinedIcon />
+        <NotificationBellBadge>
+          <NotificationsNoneOutlinedIcon />
+        </NotificationBellBadge>
       </MenuButton>
       <Menu variant="outlined" sx={{ p: 2, width: 300 }}>
         <Stack

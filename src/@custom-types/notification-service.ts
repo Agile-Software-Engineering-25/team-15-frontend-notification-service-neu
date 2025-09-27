@@ -11,6 +11,7 @@ interface NotificationObject {
   title: string;
   shortDescription: string;
   type: NotificationType;
+  readAt: string | null;
 }
 
 export type { NotificationObject, NotificationType };
