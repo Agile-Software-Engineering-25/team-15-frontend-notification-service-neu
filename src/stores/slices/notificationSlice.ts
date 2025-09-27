@@ -11,13 +11,26 @@ const notificationSlice = createSlice({
     error: null,
   } as SliceState<NotificationObject[]>,
   reducers: {
-    setNotifications: (state, action: PayloadAction<NotificationObject[]>) => {
+    replaceNotifications: (
+      state,
+      action: PayloadAction<NotificationObject[]>
+    ) => {
+      state.data = action.payload;
+    },
+    appendNotifications: (
+      state,
+      action: PayloadAction<NotificationObject[]>
+    ) => {
       state.data.push(...action.payload);
+    },
+    clearNotifications: (state) => {
+      state.data = [];
     },
   },
 });
 
-const { setNotifications } = notificationSlice.actions;
+const { replaceNotifications, appendNotifications, clearNotifications } =
+  notificationSlice.actions;
 
-export { setNotifications };
+export { replaceNotifications, appendNotifications, clearNotifications };
 export default notificationSlice.reducer;
