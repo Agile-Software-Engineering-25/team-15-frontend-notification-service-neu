@@ -6,11 +6,6 @@ This is the notification service micro frontend of the ASE-25 project.
 
 Execute the following commands when you clone the project for the first time:
 
-Make sure to execute this inside a bash environment (GitBash on windows)
-```bash
-npm run init
-```
-and then this (no matter where):
 ```bash
 npm i
 ```

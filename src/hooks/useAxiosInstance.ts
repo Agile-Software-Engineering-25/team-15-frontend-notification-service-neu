@@ -3,7 +3,9 @@ import axios from 'axios';
 
 const useAxiosInstance = (baseUrl: string) => {
   return useMemo(() => {
-    const instance = axios.create({ baseURL: baseUrl });
+    const instance = axios.create({
+      baseURL: baseUrl,
+    });
     return instance;
   }, [baseUrl]);
 };
