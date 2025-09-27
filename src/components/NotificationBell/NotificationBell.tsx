@@ -1,6 +1,6 @@
 import useApi from '@hooks/useApi';
 import { useTypedSelector } from '@/stores/rootReducer';
-import { setNotifications } from '@/stores/slices/notificationSlice';
+import { appendNotifications } from '@/stores/slices/notificationSlice';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { Sheet, Typography, Stack, Dropdown, MenuButton, Menu } from '@mui/joy';
 import { useEffect } from 'react';
@@ -19,7 +19,7 @@ const NotificationBell = () => {
 
     let populateNotifications = async () => {
       let newNotifications = await getNotifications();
-      dispatch(setNotifications(newNotifications));
+      dispatch(appendNotifications(newNotifications));
     };
     populateNotifications();
   }, []);
