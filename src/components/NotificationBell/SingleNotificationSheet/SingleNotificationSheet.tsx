@@ -93,8 +93,9 @@ const SingleNotificationSheet = ({
             {notification.shortDescription}
           </Typography>
           <Typography
-            sx={{ fontSize: '0.75rem', color: 'text.tertiary', marginTop: 2 }}
+            sx={{ fontSize: '0.75rem', marginTop: 3 }}
             alignSelf={'flex-start'}
+            color="neutral"
           >
             {formatReceivedAt(notification.receivedAt)}
           </Typography>
