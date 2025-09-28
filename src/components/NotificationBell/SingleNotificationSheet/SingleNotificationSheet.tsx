@@ -76,6 +76,7 @@ const SingleNotificationSheet = ({
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
+              lineHeight: 1.25,
             }}
           >
             {notification.title}
@@ -89,13 +90,15 @@ const SingleNotificationSheet = ({
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               marginTop: 0.4,
+              lineHeight: 1.25,
+              pb: 0.25,
             }}
             textAlign={'left'}
           >
             {notification.shortDescription}
           </Typography>
           <Typography
-            sx={{ fontSize: '0.75rem', marginTop: 3 }}
+            sx={{ fontSize: '0.75rem', marginTop: 1.3 }}
             alignSelf={'flex-start'}
             color="neutral"
           >
