@@ -88,7 +88,9 @@ const SingleNotificationSheet = ({
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
+              marginTop: 0.4,
             }}
+            textAlign={'left'}
           >
             {notification.shortDescription}
           </Typography>
