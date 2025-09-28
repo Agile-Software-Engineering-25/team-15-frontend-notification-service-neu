@@ -2,13 +2,21 @@ import useApi from '@hooks/useApi';
 import { useTypedSelector } from '@/stores/rootReducer';
 import { appendNotifications } from '@/stores/slices/notificationSlice';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { Sheet, Typography, Stack, Dropdown, MenuButton, Menu } from '@mui/joy';
+import {
+  Typography,
+  Stack,
+  Dropdown,
+  MenuButton,
+  Menu,
+  Divider,
+} from '@mui/joy';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { NotificationObject } from '@custom-types/notification-service';
 import NotificationBellBadge from './NotificationBellBadge/NotificationBellBadge';
 import { ClickAwayListener } from '@mui/material';
+import SingleNotificationSheet from './SingleNotificationSheet/SingleNotificationSheet';
 
 const NotificationBell = () => {
   let notifications = useTypedSelector((state) => state.notifications.data);
@@ -35,7 +43,7 @@ const NotificationBell = () => {
         </NotificationBellBadge>
       </MenuButton>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
-        <Menu variant="outlined" sx={{ p: 2, width: 300 }}>
+        <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
           <Stack
             spacing={1}
             sx={{
@@ -48,24 +56,22 @@ const NotificationBell = () => {
           >
             <Typography
               component="h6"
-              sx={{ fontSize: '1.125rem', fontWeight: 600 }}
+              sx={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                py: 1,
+              }}
             >
               {t('components.notificationBell.title')}
             </Typography>
+            <Divider />
             {notifications.length === 0 ? (
               <Typography sx={{ fontSize: '0.875rem' }}>
                 {t('components.notificationBell.noNotifications')}
               </Typography>
             ) : (
               notifications.map((n: NotificationObject) => (
-                <Sheet key={n.id} sx={{ p: 1 }} variant="outlined">
-                  <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
-                    {n.title}
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.875rem' }}>
-                    {n.shortDescription}
-                  </Typography>
-                </Sheet>
+                <SingleNotificationSheet notification={n} />
               ))
             )}
           </Stack>

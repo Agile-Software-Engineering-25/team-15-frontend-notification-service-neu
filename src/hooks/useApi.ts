@@ -10,7 +10,13 @@ const useApi = () => {
     const response = await axiosInstance.get('/notifications', {
       params: { userId: '1' }, // Replace this with the id of the logged-in user
     });
-    return response.data as NotificationObject[];
+
+    const normalized = response.data.map((notification: any) => ({
+      ...notification,
+      receivedAt: new Date(notification.receivedAt),
+      type: notification.notificationType,
+    })) as NotificationObject[];
+    return normalized;
   }, [axiosInstance]);
 
   return { getNotifications };
