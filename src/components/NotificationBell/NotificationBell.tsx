@@ -1,34 +1,25 @@
-import useApi from '@hooks/useApi';
 import { useTypedSelector } from '@/stores/rootReducer';
-import { appendNotifications } from '@/stores/slices/notificationSlice';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { Sheet, Typography, Stack, Dropdown, MenuButton, Menu } from '@mui/joy';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { NotificationObject } from '@custom-types/notification-service';
 import NotificationBellBadge from './NotificationBellBadge/NotificationBellBadge';
+import useWebSocket from '@/hooks/useWebsocket';
 
 const NotificationBell = () => {
   let notifications = useTypedSelector((state) => state.notifications.data);
-  let dispatch = useDispatch();
-  let { getNotifications } = useApi();
   let { t } = useTranslation();
+  const userId = "1"; // später dynamisch holen
 
-  useEffect(() => {
-    if (notifications.length > 0) return;
-
-    let populateNotifications = async () => {
-      let newNotifications = await getNotifications();
-      dispatch(appendNotifications(newNotifications));
-    };
-    populateNotifications();
-  }, []);
+  const { connectionLost } = useWebSocket(userId);
 
   return (
     <Dropdown>
       <MenuButton variant="outlined" sx={{ p: 1.3 }}>
-        <NotificationBellBadge>
+        <NotificationBellBadge
+          unreadCount={notifications.filter(n => !n.readAt).length}
+          connectionLost={connectionLost}
+        >
           <NotificationsNoneOutlinedIcon />
         </NotificationBellBadge>
       </MenuButton>
