@@ -37,8 +37,8 @@ const useWebSocket = (userId: string) => {
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
             try {
-              const notification: NotificationObject = JSON.parse(message.body);
-              dispatch(appendNotifications([notification]));
+              const notification: NotificationObject[] = JSON.parse(message.body);
+              dispatch(replaceNotifications(notification));
             } catch (err) {
               console.error('❌ Fehler beim Parsen der Notification:', err);
             }
