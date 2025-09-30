@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useDispatch } from 'react-redux';
-import { appendNotifications, replaceNotifications } from '@/stores/slices/notificationSlice';
+import {replaceNotifications } from '@/stores/slices/notificationSlice';
 import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
 

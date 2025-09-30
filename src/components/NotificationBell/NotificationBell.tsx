@@ -40,21 +40,31 @@ const NotificationBell = () => {
           >
             {t('components.notificationBell.title')}
           </Typography>
-          {notifications.length === 0 ? (
-            <Typography sx={{ fontSize: '0.875rem' }}>
-              {t('components.notificationBell.noNotifications')}
+          {connectionLost === true ? (
+            <Typography
+              component="h6"
+              sx={{ fontSize: '1.125rem', fontWeight: 600}}
+              color={'danger'}
+            >
+              {t('Serververbindung verloren')}
             </Typography>
           ) : (
-            notifications.map((n: NotificationObject) => (
-              <Sheet key={n.id} sx={{ p: 1 }} variant="outlined">
-                <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
-                  {n.title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.875rem' }}>
-                  {n.shortDescription}
-                </Typography>
-              </Sheet>
-            ))
+            notifications.length === 0 ? (
+              <Typography sx={{ fontSize: '0.875rem' }}>
+                {t('components.notificationBell.noNotifications')}
+              </Typography>
+            ) : (
+              notifications.map((n: NotificationObject) => (
+                <Sheet key={n.id} sx={{ p: 1 }} variant="outlined">
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 500 }}>
+                    {n.title}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.875rem' }}>
+                    {n.shortDescription}
+                  </Typography>
+                </Sheet>
+              ))
+            )
           )}
         </Stack>
       </Menu>
