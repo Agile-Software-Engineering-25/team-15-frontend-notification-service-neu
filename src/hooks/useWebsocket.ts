@@ -28,7 +28,7 @@ const useWebSocket = (userId: string) => {
         setConnectionLost(false);
 
         try {
-          const fresh = await getNotifications();
+          const fresh = await getNotifications(userId);
           dispatch(replaceNotifications(fresh)); // ersetzt alte Daten mit aktuellem Backend-Stand
         } catch (e) {
           console.error("❌ Fehler beim Laden der Notifications", e);
