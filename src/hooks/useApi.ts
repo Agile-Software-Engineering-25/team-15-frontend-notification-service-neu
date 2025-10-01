@@ -6,9 +6,9 @@ import type { NotificationObject } from '@custom-types/notification-service';
 const useApi = () => {
   const axiosInstance = useAxiosInstance(BACKEND_BASE_URL);
 
-  const getNotifications = useCallback(async () => {
+  const getNotifications = useCallback(async (userId: String) => {
     const response = await axiosInstance.get('/notifications', {
-      params: { userId: '1' }, // Replace this with the id of the logged-in user
+      params: { userId: userId },
     });
     return response.data as NotificationObject[];
   }, [axiosInstance]);
