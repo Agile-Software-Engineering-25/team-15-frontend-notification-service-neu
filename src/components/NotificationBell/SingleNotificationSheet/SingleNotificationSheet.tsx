@@ -5,6 +5,7 @@ import CelebrationOutlinedIcon from '@mui/icons-material/CelebrationOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import type { NotificationObject } from '@custom-types/notification-service';
 import { useTranslation } from 'react-i18next';
+import type { JSX } from 'react';
 
 const NotificationTypeIconMap: Record<string, JSX.Element> = {
   Info: <InfoOutlineIcon color="info" />,
