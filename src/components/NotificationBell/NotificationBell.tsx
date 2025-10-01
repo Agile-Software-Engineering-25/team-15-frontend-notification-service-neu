@@ -9,7 +9,7 @@ import useWebSocket from '@/hooks/useWebsocket';
 const NotificationBell = () => {
   let notifications = useTypedSelector((state) => state.notifications.data);
   let { t } = useTranslation();
-  const userId = "1"; // später dynamisch holen
+  const userId = "1"; // TODO get userId from JWT
 
   const { connectionLost } = useWebSocket(userId);
 

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import {replaceNotifications } from '@/stores/slices/notificationSlice';
 import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
+import { BACKEND_BASE_URL } from '@/config';
 
 const useWebSocket = (userId: string) => {
   const clientRef = useRef<Client | null>(null);
@@ -14,25 +15,17 @@ const useWebSocket = (userId: string) => {
   const { getNotifications } = useApi();
 
   useEffect(() => {
-    // Client nur einmal initialisieren
     if (clientRef.current) return;
 
-    const socketFactory = () => new SockJS('http://localhost:8080/api/v1/websocket');
+    const socketFactory = () => new SockJS(BACKEND_BASE_URL+'/websocket');
 
     const client = new Client({
       webSocketFactory: socketFactory,
-      reconnectDelay: 5000, // Auto-Reconnect
-
+      reconnectDelay: 5000,
       onConnect: async () => {
-        console.log("✅ WebSocket connected");
         setConnectionLost(false);
 
-        try {
-          const fresh = await getNotifications(userId);
-          dispatch(replaceNotifications(fresh)); // ersetzt alte Daten mit aktuellem Backend-Stand
-        } catch (e) {
-          console.error("❌ Fehler beim Laden der Notifications", e);
-        }
+
 
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
@@ -40,29 +33,38 @@ const useWebSocket = (userId: string) => {
               const notification: NotificationObject[] = JSON.parse(message.body);
               dispatch(replaceNotifications(notification));
             } catch (err) {
-              console.error('❌ Fehler beim Parsen der Notification:', err);
+              console.error('Error parsing notifications:', err);
             }
           }
         });
+        
+        try {
+          const fresh = await getNotifications(userId);
+          dispatch(replaceNotifications(fresh)); 
+        } catch (e) {
+          console.error("Error loading notifications:", e);
+        }
+        
+        
       },
 
       onDisconnect: () => {
-        console.warn("⚠️ Disconnected");
+        console.warn("Disconnected");
         setConnectionLost(true);
       },
 
       onWebSocketClose: () => {
-        console.warn("⚠️ Socket closed");
+        console.warn("Websocket closed");
         setConnectionLost(true);
       },
 
       onWebSocketError: (err) => {
-        console.error("⚠️ Socket error", err);
+        console.error("Websocket error", err);
         setConnectionLost(true);
       },
 
       onStompError: (frame) => {
-        console.error("❌ Broker error: ", frame.headers['message']);
+        console.error("Broker error: ", frame.headers['message']);
         setConnectionLost(true);
       },
     });
