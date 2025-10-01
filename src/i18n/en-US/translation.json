@@ -14,6 +14,15 @@
           "daysAgoPlural": "{{count}} days ago"
         }
       }
+    },
+    "notificationModal": {
+      "name": "Notification",
+      "close": "Close",
+      "markAsRead": "Mark as read",
+      "markAsUnread": "Mark as unread", 
+      "title": "Title:",
+      "description": "Description:",
+      "message": "Message:"
     }
   }
 }

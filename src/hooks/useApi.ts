@@ -19,7 +19,18 @@ const useApi = () => {
     return normalized;
   }, [axiosInstance]);
 
-  return { getNotifications };
+    const markAsRead = useCallback(async (notificationId: string) => {
+    const response = await axiosInstance.post(`/notifications/mark-as-read/${notificationId}`);
+    return response.data as NotificationObject;
+  }, [axiosInstance]);
+
+  const markAsUnread = useCallback(async (notificationId: string) => {
+    const response = await axiosInstance.post(`/notifications/mark-as-unread/${notificationId}`);
+    return response.data as NotificationObject;
+  }, [axiosInstance]);
+
+
+  return { getNotifications, markAsRead, markAsUnread };
 };
 
 export default useApi;

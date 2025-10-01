@@ -53,7 +53,7 @@ const SingleNotificationSheet = ({
     <Button
       key={notification.id}
       sx={{
-        py: 6,
+        py: 3,
         justifyContent: 'flex-start',
         width: '100%',
       }}
@@ -67,43 +67,48 @@ const SingleNotificationSheet = ({
         <Avatar size="lg" variant="outlined">
           {NotificationTypeIconMap[notification.type]}
         </Avatar>
-        <Stack sx={{ flex: 1 }}>
-          <Typography
-            sx={{
-              fontSize: '1rem',
-              fontWeight: 500,
-              textAlign: 'left',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              lineHeight: 1.25,
-            }}
-          >
-            {notification.title}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '0.875rem',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              marginTop: 0.4,
-              lineHeight: 1.25,
-              pb: 0.25,
-            }}
-            textAlign={'left'}
-          >
-            {notification.shortDescription}
-          </Typography>
-          <Typography
-            sx={{ fontSize: '0.75rem', marginTop: 1.3 }}
-            alignSelf={'flex-start'}
-            color="neutral"
-          >
-            {formatReceivedAt(notification.receivedAt)}
-          </Typography>
+        <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+          <div style={{ display: "flex", flexDirection: "column"}}>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+                fontWeight: 500,
+                textAlign: 'left',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                lineHeight: 1.25,
+              }}
+            >
+              {notification.title}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '0.875rem',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                marginTop: 0.4,
+                lineHeight: 1.25,
+                pb: 0.25,
+              }}
+              textAlign={'left'}
+            >
+              {notification.shortDescription}
+            </Typography>
+            <Typography
+              sx={{ fontSize: '0.75rem', marginTop: 1.3 }}
+              alignSelf={'flex-start'}
+              color="neutral"
+            >
+              {formatReceivedAt(notification.receivedAt)}
+            </Typography>
+          </div>
+          {notification.readAt === null && (
+            <div style={{ background: "blue", height: "8px", width: "8px", borderRadius: "12px" }}></div>
+          )}
         </Stack>
       </Stack>
     </Button>

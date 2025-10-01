@@ -14,6 +14,15 @@
           "daysAgoPlural": "vor {{count}} Tagen"
         }
       }
+    },
+    "notificationModal": {
+      "name": "Benachrichtigung",
+      "close": "Schließen",
+      "markAsRead": "Als gelesen markieren",
+      "markAsUnread": "Als ungelesen markieren",
+      "title": "Titel:",
+      "description": "Beschreibung:",
+      "message": "Nachricht:"
     }
   }
 }
