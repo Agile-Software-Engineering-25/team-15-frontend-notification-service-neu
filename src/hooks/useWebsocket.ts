@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useDispatch } from 'react-redux';
-import {replaceNotifications } from '@/stores/slices/notificationSlice';
+import { replaceNotifications } from '@/stores/slices/notificationSlice';
 import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
 import { BACKEND_BASE_URL } from '@/config';
@@ -17,7 +17,7 @@ const useWebSocket = (userId: string) => {
   useEffect(() => {
     if (clientRef.current) return;
 
-    const socketFactory = () => new SockJS(BACKEND_BASE_URL+'/websocket');
+    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/websocket');
 
     const client = new Client({
       webSocketFactory: socketFactory,
@@ -32,20 +32,20 @@ const useWebSocket = (userId: string) => {
             try {
               const notification: NotificationObject[] = JSON.parse(message.body);
               dispatch(replaceNotifications(notification));
-            } catch{
-              
+            } catch (err) {
+              console.error('Error parsing notifications:', err);
             }
           }
         });
 
         try {
           const fresh = await getNotifications(userId);
-          dispatch(replaceNotifications(fresh)); 
-        }catch{
-
+          dispatch(replaceNotifications(fresh));
+        } catch (e) {
+          console.error("Error loading notifications:", e);
         }
-        
-        
+
+
       },
 
       onDisconnect: () => {
