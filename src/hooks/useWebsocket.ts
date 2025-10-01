@@ -32,39 +32,35 @@ const useWebSocket = (userId: string) => {
             try {
               const notification: NotificationObject[] = JSON.parse(message.body);
               dispatch(replaceNotifications(notification));
-            } catch (err) {
-              console.error('Error parsing notifications:', err);
+            } catch{
+              
             }
           }
         });
-        
+
         try {
           const fresh = await getNotifications(userId);
           dispatch(replaceNotifications(fresh)); 
-        } catch (e) {
-          console.error("Error loading notifications:", e);
+        }catch{
+
         }
         
         
       },
 
       onDisconnect: () => {
-        console.warn("Disconnected");
         setConnectionLost(true);
       },
 
       onWebSocketClose: () => {
-        console.warn("Websocket closed");
         setConnectionLost(true);
       },
 
-      onWebSocketError: (err) => {
-        console.error("Websocket error", err);
+      onWebSocketError: () => {
         setConnectionLost(true);
       },
 
-      onStompError: (frame) => {
-        console.error("Broker error: ", frame.headers['message']);
+      onStompError: () => {
         setConnectionLost(true);
       },
     });
