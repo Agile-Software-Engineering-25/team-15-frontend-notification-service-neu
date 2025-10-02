@@ -1,4 +1,5 @@
 import type { NotificationObject } from '@/@custom-types/notification-service';
+import { Backdrop, Button, Dialog, Divider, Modal, Stack, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 
@@ -11,164 +12,133 @@ const NotificationModal = ({
   setSelectedNotification: (notification: NotificationObject | null) => void;
   modifyNotification: (notificationId: string, read: boolean) => void;
 }) => {
-  const [isRead, setIsRead] = useState(notification?.readAt ? true : false);
-
-  useEffect(() => {
-    if (!notification) return;
-
-    setIsRead(notification.readAt ? true : false);
-  }, [notification]);
-
-  // modal logic here
-  return notification ? (
-    <>
-      <div
+  return <Dialog
+    open={!!notification}
+    onClose={() => setSelectedNotification(null)}
+    slotProps={{
+      paper: {
+        style: {
+          borderRadius: 18
+        }
+      }
+    }}
+  >
+    {notification && <Stack style={{ padding: 24 }}>
+      <Stack
         style={{
-          position: 'fixed',
-          background: '#000',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0.5,
-          width: '200vw',
-          height: '200vh',
-          zIndex: 999,
-          transform: 'translate(-50%, -50%)',
-        }}
-        onClick={() => {
-          setSelectedNotification(null);
-        }}
-      ></div>
-      <div
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          backgroundColor: '#fbfcfe',
-          padding: '25px',
-          borderRadius: '12px',
-          border: 0,
-          transform: 'translate(-50%, -50%)',
-          zIndex: 1000,
-          fontFamily: 'Arial, sans-serif',
-          minWidth: '400px',
-          maxWidth: '90vw',
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: "row",
+          alignItems: 'center',
+          gap: '60px',
+          marginBottom: '15px',
         }}
       >
-        <div
+        <Typography style={{ fontSize: '1.5rem', margin: 0, fontWeight: 600 }}>
+          {t('components.notificationModal.name')}
+        </Typography>
+        <Button
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'blue',
+            cursor: 'pointer',
+          }}
+          onClick={() => modifyNotification(notification.id, !notification.readAt)}
+        >
+          {notification.readAt
+            ? t('components.notificationModal.markAsUnread')
+            : t('components.notificationModal.markAsRead')}
+        </Button>
+      </Stack>
+
+      <Divider />
+
+      <Stack style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <Stack
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            flexDirection: 'row',
+            gap: '10px',
+            marginTop: 10,
             alignItems: 'center',
-            gap: '60px',
-            marginBottom: '15px',
+            justifyContent: 'space-between',
           }}
         >
-          <h2 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 600 }}>
-            {t('components.notificationModal.name')}
-          </h2>
-          <button
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'blue',
-              cursor: 'pointer',
-            }}
-            onClick={() => modifyNotification(notification.id, !isRead)}
-          >
-            {isRead
-              ? t('components.notificationModal.markAsUnread')
-              : t('components.notificationModal.markAsRead')}
-          </button>
-        </div>
-        <hr></hr>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '10px',
-              marginTop: 10,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div
-              style={{
-                background: '#e8e8e8',
-                padding: 10,
-                borderRadius: '12px',
-                width: '100%',
-              }}
-            >
-              <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
-                {t('components.notificationModal.title')}
-              </h1>
-              <h2 style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
-                {notification.title}
-              </h2>
-            </div>
-            <div
-              style={{
-                background: '#e8e8e8',
-                padding: 10,
-                borderRadius: '12px',
-                width: '100%',
-              }}
-            >
-              <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
-                {t('components.notificationModal.description')}
-              </h1>
-             <h2 style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
-                {notification.shortDescription}
-              </h2>
-            </div>
-          </div>
-
-          <div
+          <Stack
             style={{
               background: '#e8e8e8',
               padding: 10,
               borderRadius: '12px',
-           
-            }}
-          >
-            <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
-              {t('components.notificationModal.message')}
-            </h1>
-            <h2 style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
-              {notification.message}
-            </h2>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
-          <button
-            onClick={() => {
-              setSelectedNotification(null);
-            }}
-            style={{
-              background: '#0d2f6b',
-              color: '#fff',
-              border: 'none',
-              fontFamily: 'Arial, sans-serif',
-              fontWeight: 800,
-              fontSize: '0.8rem',
-              padding: '10px',
-              borderRadius: '8px',
               width: '100%',
-              cursor: 'pointer',
-              marginTop: '20px',
             }}
           >
-            {t('components.notificationModal.close')}
-          </button>
-        </div>
-      </div>
-    </>
-  ) : null;
+            <Typography style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
+              {t('components.notificationModal.title')}
+            </Typography>
+            <Typography style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
+              {notification.title}
+            </Typography>
+          </Stack>
+          <Stack
+            style={{
+              background: '#e8e8e8',
+              padding: 10,
+              borderRadius: '12px',
+              width: '100%',
+            }}
+          >
+            <Typography style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
+              {t('components.notificationModal.description')}
+            </Typography>
+            <Typography style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
+              {notification.shortDescription}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Stack
+          style={{
+            background: '#e8e8e8',
+            padding: 10,
+            borderRadius: '12px',
+
+          }}
+        >
+          <Typography style={{ fontSize: '1.2rem', margin: 0, fontWeight: 600 }}>
+            {t('components.notificationModal.message')}
+          </Typography>
+          <Typography style={{ fontSize: '1.1rem', margin: 0, fontWeight: 400, wordBreak: 'break-word', maxWidth: '400px' }}>
+            {notification.message}
+          </Typography>
+        </Stack>
+      </Stack>
+
+      <Stack style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+        <Button
+          onClick={() => {
+            setSelectedNotification(null);
+          }}
+          style={{
+            background: '#0d2f6b',
+            color: '#fff',
+            border: 'none',
+            fontFamily: 'Arial, sans-serif',
+            fontWeight: 800,
+            fontSize: '0.8rem',
+            padding: '10px',
+            borderRadius: '8px',
+            width: '100%',
+            cursor: 'pointer',
+            marginTop: '20px',
+          }}
+        >
+          {t('components.notificationModal.close')}
+        </Button>
+      </Stack>
+    </Stack>}
+  </Dialog>
+
 };
 
 export default NotificationModal;

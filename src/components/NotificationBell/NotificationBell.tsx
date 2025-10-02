@@ -10,7 +10,7 @@ import {
   Menu,
   Divider,
 } from '@mui/joy';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import type { NotificationObject } from '@custom-types/notification-service';
@@ -39,32 +39,34 @@ const NotificationBell = () => {
     populateNotifications();
   }, []);
 
-  const modifyNotification = (notificationId: string, read: boolean) => {
-    let newNotifications = notifications.map((n) =>
-      n.id === notificationId
-        ? { ...n, readAt: read ? new Date().toString() : null }
-        : n
-    );
+  const updateBackend = useCallback(async (notificationId: string, read: boolean) => {
+    const res = read ? await markAsRead(notificationId) : await markAsUnread(notificationId);
+    return !(res.endsWith("unread"))
+  }, [markAsRead, markAsUnread]);
 
-    async function updateBackend() {
-      if (read) {
-        markAsRead(notificationId);
-      } else {
-        markAsUnread(notificationId);
-      }
-    }
-    updateBackend().then(() => {
-      dispatch(replaceNotifications(newNotifications));
+  const modifyNotification = (notificationId: string, read: boolean) => {
+    updateBackend(notificationId, read).then((newState) => {
+      console.log(read, newState)
+      dispatch(replaceNotifications(notifications.map((n) =>
+        n.id === notificationId
+          ? { ...n, readAt: newState ? new Date().toString() : null }
+          : n
+      )));
       setSelectedNotification((prev) =>
         prev
           ? {
             ...prev,
-            readAt: read ? new Date().toString() : null,
+            readAt: newState ? new Date().toString() : null,
           }
           : null
       );
     });
   };
+
+  const openNotificationModal = (notification: NotificationObject) => {
+    setSelectedNotification(notification) // optional: instantly set readAt, so no delay
+    modifyNotification(notification.id, true)
+  }
 
   return (
     <Dropdown open={open} onOpenChange={(_, isOpen) => setOpen(isOpen)}>
@@ -102,23 +104,7 @@ const NotificationBell = () => {
               </Typography>
             ) : (
               notifications.map((n: NotificationObject) => (
-                <button style={{ all: "unset" }} onClick={() => {
-                  markAsRead(n.id).then(() => {
-                    let newNotifications = notifications.map((notif) =>
-                      notif.id === n.id
-                        ? { ...notif, readAt: new Date().toString() }
-                        : notif
-                    );
-                    dispatch(replaceNotifications(newNotifications));
-                    setSelectedNotification({
-                      ...n,
-                      readAt: new Date().toString(),
-                    });
-                    setOpen(false);
-                  });
-                }}>
-                  <SingleNotificationSheet notification={n} />
-                </button>
+                <SingleNotificationSheet notification={n} openNotificationModal={openNotificationModal} />
               ))
             )}
           </Stack>
@@ -132,5 +118,6 @@ const NotificationBell = () => {
     </Dropdown>
   );
 };
+
 
 export default NotificationBell;

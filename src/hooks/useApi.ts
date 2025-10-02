@@ -21,12 +21,12 @@ const useApi = () => {
 
     const markAsRead = useCallback(async (notificationId: string) => {
     const response = await axiosInstance.post(`/notifications/mark-as-read/${notificationId}`);
-    return response.data as NotificationObject;
+    return response.status == 200 ? response.data : false;
   }, [axiosInstance]);
 
   const markAsUnread = useCallback(async (notificationId: string) => {
     const response = await axiosInstance.post(`/notifications/mark-as-unread/${notificationId}`);
-    return response.data as NotificationObject;
+    return response.status == 200 ? response.data : false;
   }, [axiosInstance]);
 
 

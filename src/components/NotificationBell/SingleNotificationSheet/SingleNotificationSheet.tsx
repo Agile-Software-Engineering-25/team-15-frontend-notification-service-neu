@@ -6,6 +6,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import type { NotificationObject } from '@custom-types/notification-service';
 import { useTranslation } from 'react-i18next';
 import type { JSX } from 'react';
+import CircleIcon from '@mui/icons-material/Circle';
 
 const NotificationTypeIconMap: Record<string, JSX.Element> = {
   Info: <InfoOutlineIcon color="info" />,
@@ -16,10 +17,12 @@ const NotificationTypeIconMap: Record<string, JSX.Element> = {
 
 interface SingleNotificationSheetProps {
   notification: NotificationObject;
+  openNotificationModal: (notification: NotificationObject) => void
 }
 
 const SingleNotificationSheet = ({
   notification,
+  openNotificationModal
 }: SingleNotificationSheetProps) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'components.notificationBell.singleNotificationSheet',
@@ -54,22 +57,26 @@ const SingleNotificationSheet = ({
     <Button
       key={notification.id}
       sx={{
-        py: 3,
+        py: 6,
         justifyContent: 'flex-start',
         width: '100%',
+      }}
+      onClick={() => {
+        openNotificationModal(notification)
       }}
       variant="plain"
     >
       <Stack
         direction="row"
         spacing={1}
-        sx={{ width: '100%', alignItems: 'flex-start' }}
+        sx={{ width: '100%', alignItems: 'flex-start', }}
       >
         <Avatar size="lg" variant="outlined">
           {NotificationTypeIconMap[notification.type]}
         </Avatar>
-        <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-          <div style={{ display: "flex", flexDirection: "column"}}>
+
+        <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center", overflow: "hidden", justifyContent: "space-between", width: "100%", }}>
+          <Stack style={{ display: "flex", flexDirection: "column", width: "100%", }}>
             <Typography
               sx={{
                 fontSize: '1rem',
@@ -89,6 +96,7 @@ const SingleNotificationSheet = ({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 display: '-webkit-box',
+                maxWidth: "200px",
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 marginTop: 0.4,
@@ -106,9 +114,9 @@ const SingleNotificationSheet = ({
             >
               {formatReceivedAt(notification.receivedAt)}
             </Typography>
-          </div>
+          </Stack>
           {notification.readAt === null && (
-            <div style={{ background: "blue", height: "8px", width: "8px", borderRadius: "12px" }}></div>
+            <CircleIcon sx={{ fontSize: "12px" }} />
           )}
         </Stack>
       </Stack>
