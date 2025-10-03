@@ -69,52 +69,58 @@ const NotificationBell = () => {
   }
 
   return (
-    <Dropdown open={open} onOpenChange={(_, isOpen) => setOpen(isOpen)}>
+    <Dropdown open={open} onOpenChange={(_, isOpen) => {
+      if (selectedNotification) return;
+      setOpen(isOpen);
+    }}>
       <MenuButton variant="outlined" sx={{ p: 1.3 }}>
         <NotificationBellBadge>
           <NotificationsNoneOutlinedIcon />
         </NotificationBellBadge>
       </MenuButton>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
-        <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
-          <Stack
-            spacing={1}
-            sx={{
-              height: '60vh',
-              overflowY: 'auto',
-              maxHeight: '60vh',
-              pr: 1,
-              boxSizing: 'border-box',
-            }}
-          >
-            <Typography
-              component="h6"
+        <>
+          <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
+            <Stack
+              spacing={1}
               sx={{
-                fontSize: '1.125rem',
-                fontWeight: 600,
-                py: 1,
+                height: '60vh',
+                overflowY: 'auto',
+                maxHeight: '60vh',
+                pr: 1,
+                boxSizing: 'border-box',
               }}
             >
-              {t('components.notificationBell.title')}
-            </Typography>
-            <Divider />
-            {notifications.length === 0 ? (
-              <Typography sx={{ fontSize: '0.875rem' }}>
-                {t('components.notificationBell.noNotifications')}
+              <Typography
+                component="h6"
+                sx={{
+                  fontSize: '1.125rem',
+                  fontWeight: 600,
+                  py: 1,
+                }}
+              >
+                {t('components.notificationBell.title')}
               </Typography>
-            ) : (
-              notifications.map((n: NotificationObject) => (
-                <SingleNotificationSheet notification={n} openNotificationModal={openNotificationModal} />
-              ))
-            )}
-          </Stack>
-        </Menu>
+              <Divider />
+              {notifications.length === 0 ? (
+                <Typography sx={{ fontSize: '0.875rem' }}>
+                  {t('components.notificationBell.noNotifications')}
+                </Typography>
+              ) : (
+                notifications.map((n: NotificationObject) => (
+                  <SingleNotificationSheet notification={n} openNotificationModal={openNotificationModal} />
+                ))
+              )}
+            </Stack>
+          </Menu>
+          <NotificationModal
+            notification={selectedNotification}
+            setSelectedNotification={setSelectedNotification}
+            modifyNotification={modifyNotification}
+          />
+        </>
       </ClickAwayListener>
-      <NotificationModal
-        notification={selectedNotification}
-        setSelectedNotification={setSelectedNotification}
-        modifyNotification={modifyNotification}
-      />
+
     </Dropdown>
   );
 };
