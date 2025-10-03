@@ -40,24 +40,30 @@ const NotificationBell = () => {
   }, []);
 
   const updateBackend = useCallback(async (notificationId: string, read: boolean) => {
-    const res = read ? await markAsRead(notificationId) : await markAsUnread(notificationId);
-    return !(res.endsWith("unread"))
+    try {
+      const notification = read ? await markAsRead(notificationId) : await markAsUnread(notificationId);
+      return ({
+        ...notification,
+        receivedAt: new Date(notification.receivedAt),
+        type: notification.notificationType,
+      })
+    } catch (err) {
+      console.log(err)
+      return null;
+    }
   }, [markAsRead, markAsUnread]);
 
   const modifyNotification = (notificationId: string, read: boolean) => {
-    updateBackend(notificationId, read).then((newState) => {
-      console.log(read, newState)
+    updateBackend(notificationId, read).then((newNotification) => {
+      if (!newNotification) return;
       dispatch(replaceNotifications(notifications.map((n) =>
         n.id === notificationId
-          ? { ...n, readAt: newState ? new Date().toString() : null }
+          ? newNotification
           : n
       )));
       setSelectedNotification((prev) =>
         prev
-          ? {
-            ...prev,
-            readAt: newState ? new Date().toString() : null,
-          }
+          ? newNotification
           : null
       );
     });
