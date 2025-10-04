@@ -2,7 +2,28 @@
   "components": {
     "notificationBell": {
       "title": "Notifications",
-      "noNotifications": "No new notifications"
+      "noNotifications": "No new notifications",
+      "singleNotificationSheet": {
+        "timestamp": {
+          "justNow": "just now",
+          "minutesAgo": "{{count}} minute ago",
+          "minutesAgoPlural": "{{count}} minutes ago",
+          "hoursAgo": "{{count}} hour ago",
+          "hoursAgoPlural": "{{count}} hours ago",
+          "daysAgo": "{{count}} day ago",
+          "daysAgoPlural": "{{count}} days ago"
+        }
+      },
+      "noConnection": "Lost connection to server"
+    },
+    "notificationModal": {
+      "name": "Notification",
+      "close": "Close",
+      "markAsRead": "Mark as read",
+      "markAsUnread": "Mark as unread",
+      "title": "Title:",
+      "description": "Description:",
+      "message": "Message:"
     }
   }
 }

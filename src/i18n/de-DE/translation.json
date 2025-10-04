@@ -2,7 +2,28 @@
   "components": {
     "notificationBell": {
       "title": "Benachrichtigungen",
-      "noNotifications": "Keine neuen Benachrichtigungen"
+      "noNotifications": "Keine neuen Benachrichtigungen",
+      "singleNotificationSheet": {
+        "timestamp": {
+          "justNow": "gerade eben",
+          "minutesAgo": "vor {{count}} Minute",
+          "minutesAgoPlural": "vor {{count}} Minuten",
+          "hoursAgo": "vor {{count}} Stunde",
+          "hoursAgoPlural": "vor {{count}} Stunden",
+          "daysAgo": "vor {{count}} Tag",
+          "daysAgoPlural": "vor {{count}} Tagen"
+        }
+      },
+      "noConnection": "Serververbindung verloren"
+    },
+    "notificationModal": {
+      "name": "Benachrichtigung",
+      "close": "Schließen",
+      "markAsRead": "Als gelesen markieren",
+      "markAsUnread": "Als ungelesen markieren",
+      "title": "Titel:",
+      "description": "Beschreibung:",
+      "message": "Nachricht:"
     }
   }
 }

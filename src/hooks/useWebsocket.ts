@@ -1,4 +1,3 @@
-// hooks/useWebSocket.tsx
 import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -8,11 +7,12 @@ import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
 import { BACKEND_BASE_URL } from '@/config';
 
-const useWebSocket = (userId: string) => {
+const useWebSocket = () => {
   const clientRef = useRef<Client | null>(null);
   const dispatch = useDispatch();
   const [connectionLost, setConnectionLost] = useState(true);
   const { getNotifications } = useApi();
+  const userId = '1'; // TODO get userId from JWT via context
 
   useEffect(() => {
     if (clientRef.current) return;
@@ -25,12 +25,12 @@ const useWebSocket = (userId: string) => {
       onConnect: async () => {
         setConnectionLost(false);
 
-
-
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
             try {
-              const notification: NotificationObject[] = JSON.parse(message.body);
+              const notification: NotificationObject[] = JSON.parse(
+                message.body
+              );
               dispatch(replaceNotifications(notification));
             } catch (err) {
               console.error('Error parsing notifications:', err);
@@ -39,13 +39,11 @@ const useWebSocket = (userId: string) => {
         });
 
         try {
-          const fresh = await getNotifications(userId);
+          const fresh = await getNotifications();
           dispatch(replaceNotifications(fresh));
         } catch (e) {
-          console.error("Error loading notifications:", e);
+          console.error('Error loading notifications:', e);
         }
-
-
       },
 
       onDisconnect: () => {
