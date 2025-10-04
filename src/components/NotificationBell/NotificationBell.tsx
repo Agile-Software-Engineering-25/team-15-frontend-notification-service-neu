@@ -126,7 +126,7 @@ const NotificationBell = () => {
               {connectionLost === true ? (
                 <Typography
                   component="h6"
-                  sx={{ fontSize: '1.125rem', fontWeight: 600 }}
+                  sx={{ fontSize: '1.125rem', fontWeight: 600, py: 1.5 }}
                   color={'danger'}
                 >
                   {t('components.notificationBell.noConnection')}
