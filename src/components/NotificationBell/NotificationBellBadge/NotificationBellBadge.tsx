@@ -1,40 +1,42 @@
 import { Badge, Typography } from '@mui/joy';
-import { useTypedSelector } from '@stores/rootReducer';
-import { useEffect, useState } from 'react';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 interface NotificationBellBadgeProps {
   children: React.ReactNode;
+  unreadCount: number;
+  connectionLost: boolean;
 }
 
-const NotificationBellBadge = ({ children }: NotificationBellBadgeProps) => {
-  let notifications = useTypedSelector((state) => state.notifications.data);
-  const [unreadMessages, setUnreadMessages] = useState(0);
-
-  useEffect(() => {
-    setUnreadMessages(notifications.filter((n) => n.readAt === null).length);
-  }, [notifications]);
-
-  return unreadMessages === 0 ? (
+const NotificationBellBadge = ({
+  children,
+  unreadCount,
+  connectionLost,
+}: NotificationBellBadgeProps) => {
+  return unreadCount === 0 && !connectionLost ? (
     <>{children}</>
   ) : (
     <Badge
       badgeContent={
-        unreadMessages > 0 ? (
-          unreadMessages > 5 ? (
+        connectionLost ? (
+          <Typography sx={{ color: 'white' }}>
+            <PriorityHighIcon sx={{ fontSize: 14 }} />
+          </Typography>
+        ) : unreadCount > 0 ? (
+          unreadCount > 5 ? (
             <Typography
               sx={{ color: 'var(--joy-palette-primary-200)', p: 0.2 }}
             >
               {'5+'}
             </Typography>
           ) : (
-            <Typography sx={{ color: 'var(--joy-palette-primary-200)' }}>
-              {unreadMessages}
+            <Typography sx={{ color: 'var(--joy-palette-warning-200)' }}>
+              {unreadCount}
             </Typography>
           )
         ) : undefined
       }
-      color="primary"
-      size="md"
+      color="warning"
+      size="sm"
     >
       {children}
     </Badge>

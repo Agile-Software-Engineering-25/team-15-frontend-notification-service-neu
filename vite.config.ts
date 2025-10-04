@@ -13,6 +13,9 @@ const NPM_EXTERNALS: string[] = ["react", "react-dom"];
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
+  define: {
+    global: 'window'
+  },
   base: command === "serve" ? "/" : BASE_URL_DEPLOYMENT,
   plugins: [
     react(),

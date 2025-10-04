@@ -1,6 +1,8 @@
-import useApi from '@hooks/useApi';
 import { useTypedSelector } from '@/stores/rootReducer';
-import { appendNotifications, replaceNotifications } from '@/stores/slices/notificationSlice';
+import {
+  appendNotifications,
+  replaceNotifications,
+} from '@/stores/slices/notificationSlice';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import {
   Typography,
@@ -18,12 +20,16 @@ import NotificationBellBadge from './NotificationBellBadge/NotificationBellBadge
 import { ClickAwayListener } from '@mui/material';
 import SingleNotificationSheet from './SingleNotificationSheet/SingleNotificationSheet';
 import NotificationModal from '../NotificationModal/NotificationModal';
+import useWebSocket from '@/hooks/useWebsocket';
+import useApi from '@hooks/useApi';
 
 const NotificationBell = () => {
   let notifications = useTypedSelector((state) => state.notifications.data);
   let dispatch = useDispatch();
   let { getNotifications, markAsRead, markAsUnread } = useApi();
   let { t } = useTranslation();
+
+  const { connectionLost } = useWebSocket();
   const [open, setOpen] = useState(false);
 
   const [selectedNotification, setSelectedNotification] =
@@ -39,48 +45,57 @@ const NotificationBell = () => {
     populateNotifications();
   }, []);
 
-  const updateBackend = useCallback(async (notificationId: string, read: boolean) => {
-    try {
-      const notification = read ? await markAsRead(notificationId) : await markAsUnread(notificationId);
-      return ({
-        ...notification,
-        receivedAt: new Date(notification.receivedAt),
-        type: notification.notificationType,
-      })
-    } catch (err) {
-      console.log(err)
-      return null;
-    }
-  }, [markAsRead, markAsUnread]);
+  const updateBackend = useCallback(
+    async (notificationId: string, read: boolean) => {
+      try {
+        const notification = read
+          ? await markAsRead(notificationId)
+          : await markAsUnread(notificationId);
+        return {
+          ...notification,
+          receivedAt: new Date(notification.receivedAt),
+          type: notification.notificationType,
+        };
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
+    },
+    [markAsRead, markAsUnread]
+  );
 
   const modifyNotification = (notificationId: string, read: boolean) => {
     updateBackend(notificationId, read).then((newNotification) => {
       if (!newNotification) return;
-      dispatch(replaceNotifications(notifications.map((n) =>
-        n.id === notificationId
-          ? newNotification
-          : n
-      )));
-      setSelectedNotification((prev) =>
-        prev
-          ? newNotification
-          : null
+      dispatch(
+        replaceNotifications(
+          notifications.map((n) =>
+            n.id === notificationId ? newNotification : n
+          )
+        )
       );
+      setSelectedNotification((prev) => (prev ? newNotification : null));
     });
   };
 
   const openNotificationModal = (notification: NotificationObject) => {
-    setSelectedNotification(notification) // optional: instantly set readAt, so no delay
-    modifyNotification(notification.id, true)
-  }
+    setSelectedNotification(notification); // optional: instantly set readAt, so no delay
+    modifyNotification(notification.id, true);
+  };
 
   return (
-    <Dropdown open={open} onOpenChange={(_, isOpen) => {
-      if (selectedNotification) return;
-      setOpen(isOpen);
-    }}>
+    <Dropdown
+      open={open}
+      onOpenChange={(_, isOpen) => {
+        if (selectedNotification) return;
+        setOpen(isOpen);
+      }}
+    >
       <MenuButton variant="outlined" sx={{ p: 1.3 }}>
-        <NotificationBellBadge>
+        <NotificationBellBadge
+          unreadCount={notifications.filter((n) => !n.readAt).length}
+          connectionLost={connectionLost}
+        >
           <NotificationsNoneOutlinedIcon />
         </NotificationBellBadge>
       </MenuButton>
@@ -108,13 +123,24 @@ const NotificationBell = () => {
                 {t('components.notificationBell.title')}
               </Typography>
               <Divider />
-              {notifications.length === 0 ? (
+              {connectionLost === true ? (
+                <Typography
+                  component="h6"
+                  sx={{ fontSize: '1.125rem', fontWeight: 600 }}
+                  color={'danger'}
+                >
+                  {t('components.notificationBell.noConnection')}
+                </Typography>
+              ) : notifications.length === 0 ? (
                 <Typography sx={{ fontSize: '0.875rem' }}>
                   {t('components.notificationBell.noNotifications')}
                 </Typography>
               ) : (
                 notifications.map((n: NotificationObject) => (
-                  <SingleNotificationSheet notification={n} openNotificationModal={openNotificationModal} />
+                  <SingleNotificationSheet
+                    notification={n}
+                    openNotificationModal={openNotificationModal}
+                  />
                 ))
               )}
             </Stack>
@@ -126,10 +152,8 @@ const NotificationBell = () => {
           />
         </>
       </ClickAwayListener>
-
     </Dropdown>
   );
 };
-
 
 export default NotificationBell;

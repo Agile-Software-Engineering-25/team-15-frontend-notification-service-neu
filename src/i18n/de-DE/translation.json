@@ -13,7 +13,8 @@
           "daysAgo": "vor {{count}} Tag",
           "daysAgoPlural": "vor {{count}} Tagen"
         }
-      }
+      },
+      "noConnection": "Serververbindung verloren"
     },
     "notificationModal": {
       "name": "Benachrichtigung",

@@ -13,13 +13,14 @@
           "daysAgo": "{{count}} day ago",
           "daysAgoPlural": "{{count}} days ago"
         }
-      }
+      },
+      "noConnection": "Lost connection to server"
     },
     "notificationModal": {
       "name": "Notification",
       "close": "Close",
       "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread", 
+      "markAsUnread": "Mark as unread",
       "title": "Title:",
       "description": "Description:",
       "message": "Message:"
