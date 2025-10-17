@@ -136,7 +136,10 @@ const NotificationBell = () => {
                   {t('components.notificationBell.noNotifications')}
                 </Typography>
               ) : (
-                notifications.map((n: NotificationObject) => (
+                notifications
+                .slice()
+                .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime())
+                .map((n: NotificationObject) => (
                   <SingleNotificationSheet
                     notification={n}
                     openNotificationModal={openNotificationModal}
