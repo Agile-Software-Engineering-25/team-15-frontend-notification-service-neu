@@ -24,10 +24,10 @@ import useWebSocket from '@/hooks/useWebsocket';
 import useApi from '@hooks/useApi';
 
 const NotificationBell = () => {
-  let notifications = useTypedSelector((state) => state.notifications.data);
-  let dispatch = useDispatch();
-  let { getNotifications, markAsRead, markAsUnread } = useApi();
-  let { t } = useTranslation();
+  const notifications = useTypedSelector((state) => state.notifications.data);
+  const dispatch = useDispatch();
+  const { getNotifications, markAsRead, markAsUnread } = useApi();
+  const { t } = useTranslation();
 
   const { connectionLost } = useWebSocket();
   const [open, setOpen] = useState(false);
@@ -38,8 +38,8 @@ const NotificationBell = () => {
   useEffect(() => {
     if (notifications.length > 0) return;
 
-    let populateNotifications = async () => {
-      let newNotifications = await getNotifications();
+    const populateNotifications = async () => {
+      const newNotifications = await getNotifications();
       dispatch(appendNotifications(newNotifications));
     };
     populateNotifications();
@@ -137,14 +137,18 @@ const NotificationBell = () => {
                 </Typography>
               ) : (
                 notifications
-                .slice()
-                .sort((a, b) => new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime())
-                .map((n: NotificationObject) => (
-                  <SingleNotificationSheet
-                    notification={n}
-                    openNotificationModal={openNotificationModal}
-                  />
-                ))
+                  .slice()
+                  .sort(
+                    (a, b) =>
+                      new Date(b.receivedAt).getTime() -
+                      new Date(a.receivedAt).getTime()
+                  )
+                  .map((n: NotificationObject) => (
+                    <SingleNotificationSheet
+                      notification={n}
+                      openNotificationModal={openNotificationModal}
+                    />
+                  ))
               )}
             </Stack>
           </Menu>
