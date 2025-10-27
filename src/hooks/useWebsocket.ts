@@ -28,15 +28,14 @@ const useWebSocket = () => {
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
             try {
-              const rawNotification: any [] = JSON.parse(
-                message.body
-              );
+              const rawNotification: any[] = JSON.parse(message.body);
 
-              const normalizedNotification: NotificationObject[] = rawNotification.map(n => ({
-                ...n,
-                receivedAt: new Date(n.receivedAt),
-                type: n.notificationType,
-              }));
+              const normalizedNotification: NotificationObject[] =
+                rawNotification.map((n) => ({
+                  ...n,
+                  receivedAt: new Date(n.receivedAt),
+                  type: n.notificationType,
+                }));
 
               dispatch(replaceNotifications(normalizedNotification));
             } catch (err) {

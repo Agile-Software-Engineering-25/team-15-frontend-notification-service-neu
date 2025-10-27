@@ -11,7 +11,7 @@ const lifecycle = singleSpaReact({
     const message = err instanceof Error ? err.message : String(err);
     return <div>Error: {message}</div>;
   },
-  rootComponent: App
+  rootComponent: App,
 });
 // IMPORTANT:  Because the file is named spa.tsx, the string 'spa'
 // must be passed to the call to cssLifecycleFactory.
