@@ -2,7 +2,7 @@ name: Code Quality Checks
 
 on:
   push:
-    branches: ['**'] # Run on all branches
+    branches: ["**"] # Run on all branches
   pull_request:
     branches: [main] # Run on PRs targeting main
 
@@ -17,8 +17,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -36,11 +36,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: init project
-        run: npm run init
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci

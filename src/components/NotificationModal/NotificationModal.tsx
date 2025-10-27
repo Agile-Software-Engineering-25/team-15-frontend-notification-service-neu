@@ -1,7 +1,7 @@
 import type { NotificationObject } from '@/@custom-types/notification-service';
+import { Modal } from '@agile-software/shared-components';
 import { Button, Stack, Typography } from '@mui/joy';
 import { t } from 'i18next';
-import { Modal } from '@agile-software/shared-components';
 
 const NotificationModal = ({
   notification,
@@ -16,7 +16,7 @@ const NotificationModal = ({
     <Modal
       header={t('components.notificationModal.name')}
       open={!!notification}
-      setOpen={(open) => setSelectedNotification(null)}
+      setOpen={() => setSelectedNotification(null)}
       modalDialogSX={{ maxWidth: '600px', width: '90%', maxHeight: '90%' }}
       modalSX={{ zIndex: 1000 }}
     >
