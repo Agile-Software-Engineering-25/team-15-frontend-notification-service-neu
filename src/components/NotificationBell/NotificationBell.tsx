@@ -91,7 +91,7 @@ const NotificationBell = () => {
         setOpen(isOpen);
       }}
     >
-      <MenuButton variant="outlined" sx={{ p: 1.3 }}>
+      <MenuButton variant="plain" sx={{ p: 1.3 }} color={"primary"}>
         <NotificationBellBadge
           unreadCount={notifications.filter((n) => !n.readAt).length}
           connectionLost={connectionLost}
