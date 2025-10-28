@@ -96,7 +96,7 @@ const NotificationBell = () => {
           unreadCount={notifications.filter((n) => !n.readAt).length}
           connectionLost={connectionLost}
         >
-          <NotificationsNoneOutlinedIcon />
+          <NotificationsNoneOutlinedIcon color="primary"/>
         </NotificationBellBadge>
       </MenuButton>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
