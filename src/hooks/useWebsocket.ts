@@ -6,13 +6,15 @@ import { replaceNotifications } from '@/stores/slices/notificationSlice';
 import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
 import { BACKEND_BASE_URL } from '@/config';
+import useUser from './useUser';
 
 const useWebSocket = () => {
   const clientRef = useRef<Client | null>(null);
   const dispatch = useDispatch();
   const [connectionLost, setConnectionLost] = useState(true);
   const { getNotifications } = useApi();
-  const userId = '1'; // TODO get userId from JWT via context
+  const user = useUser();
+  const userId = user.getUserId();
 
   useEffect(() => {
     if (clientRef.current) return;
