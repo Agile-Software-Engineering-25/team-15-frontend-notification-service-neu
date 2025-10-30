@@ -14,7 +14,7 @@
           "daysAgoPlural": "vor {{count}} Tagen"
         }
       },
-      "noConnection": "Serververbindung verloren TESETTTTTT"
+      "noConnection": "Serververbindung verloren"
     },
     "notificationModal": {
       "name": "Benachrichtigung",
