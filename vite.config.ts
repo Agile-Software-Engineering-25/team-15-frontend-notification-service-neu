@@ -15,7 +15,7 @@ export default defineConfig(({ command }) => ({
   define: {
     global: 'window',
   },
-  base: command === 'serve' ? '/' : '/notification-service/',
+  base: command === 'serve' ? '/' : '/api/ASE-15/',
   plugins: [
     react(),
     command === 'serve' && vitePluginReactHMR(ENTRY_POINT),
