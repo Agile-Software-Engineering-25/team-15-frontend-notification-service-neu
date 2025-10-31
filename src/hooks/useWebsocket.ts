@@ -22,6 +22,9 @@ const useWebSocket = () => {
     const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/websocket');
 
     const client = new Client({
+      connectHeaders: {
+        Authorization: `Bearer ${user.getAccessToken()}`,
+      },
       webSocketFactory: socketFactory,
       reconnectDelay: 5000,
       onConnect: async () => {
