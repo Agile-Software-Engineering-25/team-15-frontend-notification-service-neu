@@ -19,7 +19,7 @@ const useWebSocket = () => {
   useEffect(() => {
     if (clientRef.current) return;
 
-    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/websocket');
+    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/ws');
 
     const client = new Client({
       connectHeaders: {
