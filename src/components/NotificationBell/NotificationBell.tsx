@@ -91,12 +91,12 @@ const NotificationBell = () => {
         setOpen(isOpen);
       }}
     >
-      <MenuButton variant="plain" sx={{ p: 1.3 }} color={"primary"}>
+      <MenuButton variant="plain" sx={{ p: 1.3 }} color={'primary'}>
         <NotificationBellBadge
           unreadCount={notifications.filter((n) => !n.readAt).length}
           connectionLost={connectionLost}
         >
-          <NotificationsNoneOutlinedIcon color="primary"/>
+          <NotificationsNoneOutlinedIcon color="primary" />
         </NotificationBellBadge>
       </MenuButton>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
@@ -110,6 +110,9 @@ const NotificationBell = () => {
                 maxHeight: '60vh',
                 pr: 1,
                 boxSizing: 'border-box',
+                '& > *': {
+                  flexShrink: 0, // prevent notification items from shrinking
+                },
               }}
             >
               <Typography
