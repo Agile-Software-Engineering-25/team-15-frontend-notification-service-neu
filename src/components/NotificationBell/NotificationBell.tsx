@@ -137,7 +137,7 @@ const NotificationBell = () => {
                 </Typography>
               ) : (
                 notifications
-                  .slice()
+                  .slice(0, 6)
                   .sort(
                     (a, b) =>
                       new Date(b.receivedAt).getTime() -
