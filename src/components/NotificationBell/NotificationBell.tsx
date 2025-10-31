@@ -110,6 +110,9 @@ const NotificationBell = () => {
                 maxHeight: '60vh',
                 pr: 1,
                 boxSizing: 'border-box',
+                '& > *': {
+                  flexShrink: 0, // prevent notification items from shrinking
+                },
               }}
             >
               <Typography
@@ -137,7 +140,7 @@ const NotificationBell = () => {
                 </Typography>
               ) : (
                 notifications
-                  .slice(0, 6)
+                  .slice()
                   .sort(
                     (a, b) =>
                       new Date(b.receivedAt).getTime() -
