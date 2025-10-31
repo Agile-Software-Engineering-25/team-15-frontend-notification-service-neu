@@ -14,6 +14,7 @@ const useApi = () => {
       params: { userId: userId },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const normalized = response.data.map((notification: any) => ({
       ...notification,
       receivedAt: new Date(notification.receivedAt),

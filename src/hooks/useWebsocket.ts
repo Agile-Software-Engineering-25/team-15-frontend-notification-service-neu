@@ -33,6 +33,7 @@ const useWebSocket = () => {
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
             try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const rawNotification: any[] = JSON.parse(message.body);
 
               const normalizedNotification: NotificationObject[] =
