@@ -6,20 +6,25 @@ import { replaceNotifications } from '@/stores/slices/notificationSlice';
 import type { NotificationObject } from '@custom-types/notification-service';
 import useApi from './useApi';
 import { BACKEND_BASE_URL } from '@/config';
+import useUser from './useUser';
 
 const useWebSocket = () => {
   const clientRef = useRef<Client | null>(null);
   const dispatch = useDispatch();
   const [connectionLost, setConnectionLost] = useState(true);
   const { getNotifications } = useApi();
-  const userId = '1'; // TODO get userId from JWT via context
+  const user = useUser();
+  const userId = user.getUserId();
 
   useEffect(() => {
     if (clientRef.current) return;
 
-    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/websocket');
+    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/ws');
 
     const client = new Client({
+      connectHeaders: {
+        Authorization: `Bearer ${user.getAccessToken()}`,
+      },
       webSocketFactory: socketFactory,
       reconnectDelay: 5000,
       onConnect: async () => {
@@ -28,6 +33,7 @@ const useWebSocket = () => {
         client.subscribe(`/topic/notifications/${userId}`, (message) => {
           if (message.body) {
             try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const rawNotification: any[] = JSON.parse(message.body);
 
               const normalizedNotification: NotificationObject[] =

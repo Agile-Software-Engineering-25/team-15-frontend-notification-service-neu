@@ -57,7 +57,7 @@ const SingleNotificationSheet = ({
     <Button
       key={notification.id}
       sx={{
-        py: 6,
+        py: '6px',
         justifyContent: 'flex-start',
         width: '100%',
       }}

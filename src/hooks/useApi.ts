@@ -2,16 +2,19 @@ import useAxiosInstance from '@hooks/useAxiosInstance';
 import { BACKEND_BASE_URL } from '@/config';
 import { useCallback } from 'react';
 import type { NotificationObject } from '@custom-types/notification-service';
+import useUser from './useUser';
 
 const useApi = () => {
   const axiosInstance = useAxiosInstance(BACKEND_BASE_URL);
-  const userId = '1'; // TODO get userId from JWT via context
+  const user = useUser();
+  const userId = user.getUserId();
 
   const getNotifications = useCallback(async () => {
     const response = await axiosInstance.get('/notifications', {
       params: { userId: userId },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const normalized = response.data.map((notification: any) => ({
       ...notification,
       receivedAt: new Date(notification.receivedAt),
