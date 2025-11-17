@@ -16,13 +16,18 @@ const useWebSocket = () => {
   const user = useUser();
   const userId = user.getUserId();
   const accessToken = user.getAccessToken();
-  
+
   // Use ref to track if we're already initializing to prevent double connections
   const isInitializingRef = useRef(false);
 
   useEffect(() => {
     // Prevent multiple simultaneous initializations (especially important for Firefox)
-    if (clientRef.current || isInitializingRef.current || !userId || !accessToken) {
+    if (
+      clientRef.current ||
+      isInitializingRef.current ||
+      !userId ||
+      !accessToken
+    ) {
       return;
     }
 
