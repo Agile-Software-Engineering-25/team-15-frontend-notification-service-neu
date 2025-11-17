@@ -35,6 +35,12 @@ const NotificationBell = () => {
   const [selectedNotification, setSelectedNotification] =
     useState<NotificationObject | null>(null);
 
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [initialInteractionTime, setInitialInteractionTime] = useState<
+    number | null
+  >(null);
+  const [thresholdReached, setThresholdReached] = useState(false);
+
   useEffect(() => {
     if (notifications.length > 0) return;
 
@@ -83,14 +89,48 @@ const NotificationBell = () => {
     modifyNotification(notification.id, true);
   };
 
+  const handleDropdownOpenChange = (
+    _: React.SyntheticEvent | null,
+    isOpen: boolean
+  ) => {
+    if (selectedNotification) return;
+
+    if (isOpen) {
+      const now = Date.now();
+
+      if (initialInteractionTime === null) {
+        setInitialInteractionTime(now);
+        setInteractionCount(1);
+      } else {
+        const timeDiff = (now - initialInteractionTime) / 1000;
+
+        if (timeDiff <= 5) {
+          const newCount = interactionCount + 1;
+          setInteractionCount(newCount);
+
+          if (newCount >= 10 && timeDiff >= 3 && !thresholdReached) {
+            setThresholdReached(true);
+            dispatch(
+              replaceNotifications(
+                notifications.map((n) => ({
+                  ...n,
+                  title: 'ᓚᘏᗢ',
+                }))
+              )
+            );
+          }
+        } else {
+          setInitialInteractionTime(now);
+          setInteractionCount(1);
+        }
+      }
+    }
+
+    setOpen(isOpen);
+  };
+
   return (
-    <Dropdown
-      open={open}
-      onOpenChange={(_, isOpen) => {
-        if (selectedNotification) return;
-        setOpen(isOpen);
-      }}
-    >
+    <Dropdown open={open} onOpenChange={handleDropdownOpenChange}>
       <MenuButton variant="plain" sx={{ p: 1.3 }} color={'primary'}>
         <NotificationBellBadge
           unreadCount={notifications.filter((n) => !n.readAt).length}
@@ -99,69 +139,67 @@ const NotificationBell = () => {
           <NotificationsNoneOutlinedIcon color="primary" />
         </NotificationBellBadge>
       </MenuButton>
-      <ClickAwayListener onClickAway={() => setOpen(false)}>
-        <>
-          <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
-            <Stack
-              spacing={1}
+      <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <Stack
+            spacing={1}
+            sx={{
+              height: '60vh',
+              overflowY: 'auto',
+              maxHeight: '60vh',
+              pr: 1,
+              boxSizing: 'border-box',
+              '& > *': {
+                flexShrink: 0, // prevent notification items from shrinking
+              },
+            }}
+          >
+            <Typography
+              component="h6"
               sx={{
-                height: '60vh',
-                overflowY: 'auto',
-                maxHeight: '60vh',
-                pr: 1,
-                boxSizing: 'border-box',
-                '& > *': {
-                  flexShrink: 0, // prevent notification items from shrinking
-                },
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                py: 1,
               }}
             >
+              {t('components.notificationBell.title')}
+            </Typography>
+            <Divider />
+            {connectionLost === true ? (
               <Typography
                 component="h6"
-                sx={{
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
-                  py: 1,
-                }}
+                sx={{ fontSize: '1.125rem', fontWeight: 600, py: 1.5 }}
+                color={'danger'}
               >
-                {t('components.notificationBell.title')}
+                {t('components.notificationBell.noConnection')}
               </Typography>
-              <Divider />
-              {connectionLost === true ? (
-                <Typography
-                  component="h6"
-                  sx={{ fontSize: '1.125rem', fontWeight: 600, py: 1.5 }}
-                  color={'danger'}
-                >
-                  {t('components.notificationBell.noConnection')}
-                </Typography>
-              ) : notifications.length === 0 ? (
-                <Typography sx={{ fontSize: '0.875rem' }}>
-                  {t('components.notificationBell.noNotifications')}
-                </Typography>
-              ) : (
-                notifications
-                  .slice()
-                  .sort(
-                    (a, b) =>
-                      new Date(b.receivedAt).getTime() -
-                      new Date(a.receivedAt).getTime()
-                  )
-                  .map((n: NotificationObject) => (
-                    <SingleNotificationSheet
-                      notification={n}
-                      openNotificationModal={openNotificationModal}
-                    />
-                  ))
-              )}
-            </Stack>
-          </Menu>
-          <NotificationModal
-            notification={selectedNotification}
-            setSelectedNotification={setSelectedNotification}
-            modifyNotification={modifyNotification}
-          />
-        </>
-      </ClickAwayListener>
+            ) : notifications.length === 0 ? (
+              <Typography sx={{ fontSize: '0.875rem' }}>
+                {t('components.notificationBell.noNotifications')}
+              </Typography>
+            ) : (
+              notifications
+                .slice()
+                .sort(
+                  (a, b) =>
+                    new Date(b.receivedAt).getTime() -
+                    new Date(a.receivedAt).getTime()
+                )
+                .map((n: NotificationObject) => (
+                  <SingleNotificationSheet
+                    notification={n}
+                    openNotificationModal={openNotificationModal}
+                  />
+                ))
+            )}
+          </Stack>
+        </ClickAwayListener>
+      </Menu>
+      <NotificationModal
+        notification={selectedNotification}
+        setSelectedNotification={setSelectedNotification}
+        modifyNotification={modifyNotification}
+      />
     </Dropdown>
   );
 };
