@@ -35,6 +35,10 @@ const NotificationBell = () => {
   const [selectedNotification, setSelectedNotification] =
     useState<NotificationObject | null>(null);
 
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [initialInteractionTime, setInitialInteractionTime] = useState<number | null>(null);
+  const [thresholdReached, setThresholdReached] = useState(false);
+
   useEffect(() => {
     if (notifications.length > 0) return;
 
@@ -83,13 +87,47 @@ const NotificationBell = () => {
     modifyNotification(notification.id, true);
   };
 
+  const handleDropdownOpenChange = (_: React.SyntheticEvent | null, isOpen: boolean) => {
+    if (selectedNotification) return;
+    
+    if (isOpen) {
+      const now = Date.now();
+      
+      if (initialInteractionTime === null) {
+        setInitialInteractionTime(now);
+        setInteractionCount(1);
+      } else {
+        const timeDiff = (now - initialInteractionTime) / 1000;
+        
+        if (timeDiff <= 5) {
+          const newCount = interactionCount + 1;
+          setInteractionCount(newCount);
+          
+          if (newCount >= 10 && timeDiff >= 3 && !thresholdReached) {
+            setThresholdReached(true);
+            dispatch(
+              replaceNotifications(
+                notifications.map((n) => ({
+                  ...n,
+                  title: 'ᓚᘏᗢ',
+                }))
+              )
+            );
+          }
+        } else {
+          setInitialInteractionTime(now);
+          setInteractionCount(1);
+        }
+      }
+    }
+    
+    setOpen(isOpen);
+  };
+
   return (
     <Dropdown
       open={open}
-      onOpenChange={(_, isOpen) => {
-        if (selectedNotification) return;
-        setOpen(isOpen);
-      }}
+      onOpenChange={handleDropdownOpenChange}
     >
       <MenuButton variant="plain" sx={{ p: 1.3 }} color={'primary'}>
         <NotificationBellBadge

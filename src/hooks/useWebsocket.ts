@@ -15,18 +15,33 @@ const useWebSocket = () => {
   const { getNotifications } = useApi();
   const user = useUser();
   const userId = user.getUserId();
+  const accessToken = user.getAccessToken();
+  
+  // Use ref to track if we're already initializing to prevent double connections
+  const isInitializingRef = useRef(false);
 
   useEffect(() => {
-    if (clientRef.current) return;
+    // Prevent multiple simultaneous initializations (especially important for Firefox)
+    if (clientRef.current || isInitializingRef.current || !userId || !accessToken) {
+      return;
+    }
 
-    const socketFactory = () => new SockJS(BACKEND_BASE_URL + '/ws');
+    isInitializingRef.current = true;
+
+    const socketFactory = () => {
+      const socket = new SockJS(BACKEND_BASE_URL + '/ws');
+      return socket;
+    };
 
     const client = new Client({
       connectHeaders: {
-        Authorization: `Bearer ${user.getAccessToken()}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       webSocketFactory: socketFactory,
       reconnectDelay: 5000,
+      // Add heartbeat to keep connection alive (helps with Firefox)
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
       onConnect: async () => {
         setConnectionLost(false);
 
@@ -66,23 +81,30 @@ const useWebSocket = () => {
         setConnectionLost(true);
       },
 
-      onWebSocketError: () => {
+      onWebSocketError: (error) => {
+        console.error('WebSocket error:', error);
         setConnectionLost(true);
       },
 
-      onStompError: () => {
+      onStompError: (frame) => {
+        console.error('STOMP error:', frame);
         setConnectionLost(true);
       },
     });
 
     client.activate();
     clientRef.current = client;
+    isInitializingRef.current = false;
 
     return () => {
-      client.deactivate();
-      clientRef.current = null;
+      if (clientRef.current) {
+        clientRef.current.deactivate();
+        clientRef.current = null;
+      }
+      isInitializingRef.current = false;
     };
-  }, [userId, dispatch]);
+    // Only re-run if userId or accessToken changes
+  }, [userId, accessToken, dispatch, getNotifications]);
 
   return { connectionLost };
 };
