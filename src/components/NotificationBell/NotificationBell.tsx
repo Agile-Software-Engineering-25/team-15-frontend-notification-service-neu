@@ -137,69 +137,67 @@ const NotificationBell = () => {
           <NotificationsNoneOutlinedIcon color="primary" />
         </NotificationBellBadge>
       </MenuButton>
-      <ClickAwayListener onClickAway={() => setOpen(false)}>
-        <>
-          <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
-            <Stack
-              spacing={1}
+      <Menu variant="outlined" sx={{ p: 2, width: '20vw', maxWidth: 700 }}>
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <Stack
+            spacing={1}
+            sx={{
+              height: '60vh',
+              overflowY: 'auto',
+              maxHeight: '60vh',
+              pr: 1,
+              boxSizing: 'border-box',
+              '& > *': {
+                flexShrink: 0, // prevent notification items from shrinking
+              },
+            }}
+          >
+            <Typography
+              component="h6"
               sx={{
-                height: '60vh',
-                overflowY: 'auto',
-                maxHeight: '60vh',
-                pr: 1,
-                boxSizing: 'border-box',
-                '& > *': {
-                  flexShrink: 0, // prevent notification items from shrinking
-                },
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                py: 1,
               }}
             >
+              {t('components.notificationBell.title')}
+            </Typography>
+            <Divider />
+            {connectionLost === true ? (
               <Typography
                 component="h6"
-                sx={{
-                  fontSize: '1.125rem',
-                  fontWeight: 600,
-                  py: 1,
-                }}
+                sx={{ fontSize: '1.125rem', fontWeight: 600, py: 1.5 }}
+                color={'danger'}
               >
-                {t('components.notificationBell.title')}
+                {t('components.notificationBell.noConnection')}
               </Typography>
-              <Divider />
-              {connectionLost === true ? (
-                <Typography
-                  component="h6"
-                  sx={{ fontSize: '1.125rem', fontWeight: 600, py: 1.5 }}
-                  color={'danger'}
-                >
-                  {t('components.notificationBell.noConnection')}
-                </Typography>
-              ) : notifications.length === 0 ? (
-                <Typography sx={{ fontSize: '0.875rem' }}>
-                  {t('components.notificationBell.noNotifications')}
-                </Typography>
-              ) : (
-                notifications
-                  .slice()
-                  .sort(
-                    (a, b) =>
-                      new Date(b.receivedAt).getTime() -
-                      new Date(a.receivedAt).getTime()
-                  )
-                  .map((n: NotificationObject) => (
-                    <SingleNotificationSheet
-                      notification={n}
-                      openNotificationModal={openNotificationModal}
-                    />
-                  ))
-              )}
-            </Stack>
-          </Menu>
-          <NotificationModal
-            notification={selectedNotification}
-            setSelectedNotification={setSelectedNotification}
-            modifyNotification={modifyNotification}
-          />
-        </>
-      </ClickAwayListener>
+            ) : notifications.length === 0 ? (
+              <Typography sx={{ fontSize: '0.875rem' }}>
+                {t('components.notificationBell.noNotifications')}
+              </Typography>
+            ) : (
+              notifications
+                .slice()
+                .sort(
+                  (a, b) =>
+                    new Date(b.receivedAt).getTime() -
+                    new Date(a.receivedAt).getTime()
+                )
+                .map((n: NotificationObject) => (
+                  <SingleNotificationSheet
+                    notification={n}
+                    openNotificationModal={openNotificationModal}
+                  />
+                ))
+            )}
+          </Stack>
+        </ClickAwayListener>
+      </Menu>
+      <NotificationModal
+        notification={selectedNotification}
+        setSelectedNotification={setSelectedNotification}
+        modifyNotification={modifyNotification}
+      />
     </Dropdown>
   );
 };
