@@ -39,7 +39,6 @@ const NotificationBell = () => {
   const [initialInteractionTime, setInitialInteractionTime] = useState<
     number | null
   >(null);
-  const [thresholdReached, setThresholdReached] = useState(false);
 
   useEffect(() => {
     if (notifications.length > 0) return;
@@ -104,20 +103,35 @@ const NotificationBell = () => {
       } else {
         const timeDiff = (now - initialInteractionTime) / 1000;
 
-        if (timeDiff <= 5) {
+        if (timeDiff <= 2) {
           const newCount = interactionCount + 1;
           setInteractionCount(newCount);
 
-          if (newCount >= 10 && timeDiff >= 3 && !thresholdReached) {
-            setThresholdReached(true);
-            dispatch(
-              replaceNotifications(
-                notifications.map((n) => ({
-                  ...n,
-                  title: 'ᓚᘏᗢ',
-                }))
-              )
-            );
+          if (newCount <= 5) {
+            // Sort notifications by receivedAt to get the correct order (newest first)
+            const sortedNotifications = notifications
+              .slice()
+              .sort(
+                (a, b) =>
+                  new Date(b.receivedAt).getTime() -
+                  new Date(a.receivedAt).getTime()
+              );
+
+            // Change from bottom up (last item in the sorted list = oldest/bottom)
+            const indexToChange = sortedNotifications.length - newCount;
+
+            if (indexToChange >= 0) {
+              const notificationToChange = sortedNotifications[indexToChange];
+              dispatch(
+                replaceNotifications(
+                  notifications.map((n) =>
+                    n.id === notificationToChange.id
+                      ? { ...n, title: 'ᓚᘏᗢ' }
+                      : n
+                  )
+                )
+              );
+            }
           }
         } else {
           setInitialInteractionTime(now);
