@@ -39,6 +39,8 @@ const NotificationBell = () => {
   const [initialInteractionTime, setInitialInteractionTime] = useState<
     number | null
   >(null);
+  const [featureActivated, setFeatureActivated] = useState(false);
+  const [transformedCount, setTransformedCount] = useState(0);
 
   useEffect(() => {
     if (notifications.length > 0) return;
@@ -97,31 +99,25 @@ const NotificationBell = () => {
     if (isOpen) {
       const now = Date.now();
 
-      if (initialInteractionTime === null) {
-        setInitialInteractionTime(now);
-        setInteractionCount(1);
-      } else {
-        const timeDiff = (now - initialInteractionTime) / 1000;
+      // If feature is already activated, just transform one notification per open
+      if (featureActivated) {
+        if (transformedCount < notifications.length) {
+          const sortedNotifications = notifications
+            .slice()
+            .sort(
+              (a, b) =>
+                new Date(b.receivedAt).getTime() -
+                new Date(a.receivedAt).getTime()
+            );
 
-        if (timeDiff <= 2) {
-          const newCount = interactionCount + 1;
-          setInteractionCount(newCount);
+          // Transform from bottom up
+          const indexToChange =
+            sortedNotifications.length - transformedCount - 1;
 
-          if (newCount <= 5) {
-            // Sort notifications by receivedAt to get the correct order (newest first)
-            const sortedNotifications = notifications
-              .slice()
-              .sort(
-                (a, b) =>
-                  new Date(b.receivedAt).getTime() -
-                  new Date(a.receivedAt).getTime()
-              );
-
-            // Change from bottom up (last item in the sorted list = oldest/bottom)
-            const indexToChange = sortedNotifications.length - newCount;
-
-            if (indexToChange >= 0) {
-              const notificationToChange = sortedNotifications[indexToChange];
+          if (indexToChange >= 0) {
+            const notificationToChange = sortedNotifications[indexToChange];
+            // Only change if not already changed
+            if (notificationToChange.title !== 'ᓚᘏᗢ') {
               dispatch(
                 replaceNotifications(
                   notifications.map((n) =>
@@ -131,11 +127,32 @@ const NotificationBell = () => {
                   )
                 )
               );
+              setTransformedCount(transformedCount + 1);
             }
           }
-        } else {
+        }
+      } else {
+        // Activation phase: count rapid clicks
+        if (initialInteractionTime === null) {
           setInitialInteractionTime(now);
           setInteractionCount(1);
+        } else {
+          const timeDiff = (now - initialInteractionTime) / 1000;
+
+          if (timeDiff <= 3) {
+            const newCount = interactionCount + 1;
+            setInteractionCount(newCount);
+
+            // Activate feature after 5 clicks within 3 seconds
+            if (newCount >= 5) {
+              setFeatureActivated(true);
+              setTransformedCount(0);
+            }
+          } else {
+            // Reset if too slow
+            setInitialInteractionTime(now);
+            setInteractionCount(1);
+          }
         }
       }
     }
