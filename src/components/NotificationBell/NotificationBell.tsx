@@ -111,7 +111,8 @@ const NotificationBell = () => {
             );
 
           // Transform from bottom up
-          const indexToChange = sortedNotifications.length - transformedCount - 1;
+          const indexToChange =
+            sortedNotifications.length - transformedCount - 1;
 
           if (indexToChange >= 0) {
             const notificationToChange = sortedNotifications[indexToChange];
